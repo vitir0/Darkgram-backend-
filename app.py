@@ -1,79 +1,74 @@
 from flask import Flask, request, jsonify
 import smtplib
 from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 import os
-from dotenv import load_dotenv
-
-load_dotenv()  # Загрузка переменных окружения из .env файла
+import random
+from flask_cors import CORS
 
 app = Flask(__name__)
-
-# Конфигурация почтового сервера
-SMTP_SERVER = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
-SMTP_PORT = int(os.getenv('SMTP_PORT', 587))
-EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS')
-EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
-SENDER_NAME = os.getenv('SENDER_NAME', 'DarkGram System')
+CORS(app)
 
 @app.route('/send-verification', methods=['POST'])
 def send_verification():
-    data = request.json
-    email = data.get('email')
-    code = data.get('code')
-    
-    if not email or not code:
-        return jsonify({'success': False, 'error': 'Missing email or code'}), 400
-    
     try:
-        # Создаем сообщение
-        msg = MIMEMultipart()
-        msg['From'] = f"{SENDER_NAME} <{EMAIL_ADDRESS}>"
-        msg['To'] = email
-        msg['Subject'] = "Код подтверждения DarkGram"
+        data = request.json
+        email = data.get('email')
+        code = data.get('code')
         
-        # HTML версия письма
-        html = f"""
+        if not email or not code:
+            return jsonify({'success': False, 'error': 'Недостаточно данных'}), 400
+        
+        smtp_server = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
+        smtp_port = int(os.getenv('SMTP_PORT', 587))
+        smtp_user = os.getenv('SMTP_USER')
+        smtp_password = os.getenv('SMTP_PASSWORD')
+        
+        subject = 'Код подтверждения DarkGram'
+        body = f"""
         <html>
         <head>
             <style>
-                body {{ font-family: Arial, sans-serif; background-color: #0a0a0a; color: #e0e0e0; }}
-                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; background-color: #1a1a1a; border-radius: 5px; }}
-                .header {{ color: #ff2a2a; text-align: center; font-size: 24px; margin-bottom: 20px; }}
-                .code {{ font-size: 32px; font-weight: bold; color: #ff5e00; text-align: center; margin: 20px 0; padding: 15px; background-color: #0f0f0f; border-radius: 5px; }}
-                .footer {{ margin-top: 30px; text-align: center; color: #888; font-size: 12px; }}
+                body {{ font-family: Arial, sans-serif; background-color: #050505; color: #e0e0e0; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ff2a2a; background-color: rgba(10, 2, 2, 0.85); }}
+                .header {{ text-align: center; margin-bottom: 20px; }}
+                .code {{ font-size: 2.5rem; letter-spacing: 5px; color: #ff5e00; text-align: center; margin: 30px 0; }}
+                .footer {{ margin-top: 30px; text-align: center; font-size: 0.9rem; opacity: 0.7; }}
             </style>
         </head>
         <body>
             <div class="container">
-                <div class="header">Подтверждение регистрации в DarkGram</div>
-                <p>Здравствуйте,</p>
-                <p>Для завершения регистрации в системе DarkGram используйте следующий код подтверждения:</p>
+                <div class="header">
+                    <h2>DarkGram | Подтверждение Email</h2>
+                </div>
+                
+                <p>Ваш код подтверждения для завершения регистрации:</p>
+                
                 <div class="code">{code}</div>
-                <p>Этот код действителен в течение 10 минут. Никому не сообщайте этот код.</p>
-                <p>Если вы не запрашивали это подтверждение, проигнорируйте это сообщение.</p>
+                
+                <p>Введите этот код в форме регистрации для активации вашего аккаунта.</p>
+                
                 <div class="footer">
-                    © 2025 DarkGram Network. Все права защищены.<br>
-                    Это автоматическое сообщение, пожалуйста, не отвечайте на него.
+                    DARKGRAM NETWORK // PROTECTED BY LEVEL 7 ENCRYPTION // 2025
                 </div>
             </div>
         </body>
         </html>
         """
         
-        msg.attach(MIMEText(html, 'html'))
+        msg = MIMEText(body, 'html')
+        msg['Subject'] = subject
+        msg['From'] = smtp_user
+        msg['To'] = email
         
-        # Отправка письма
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()
-            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-            server.send_message(msg)
+            server.login(smtp_user, smtp_password)
+            server.sendmail(smtp_user, [email], msg.as_string())
         
         return jsonify({'success': True}), 200
-    
+        
     except Exception as e:
-        app.logger.error(f'Ошибка отправки email: {str(e)}')
         return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
+    app.run(host='0.0.0.0', port=10000)
