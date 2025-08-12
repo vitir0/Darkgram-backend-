@@ -1,12 +1,16 @@
 from flask import Flask, request, jsonify
 import smtplib
 from email.mime.text import MIMEText
-import os
-import random
-from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+
+# ===== КОНФИГУРАЦИЯ =====
+# ЗАМЕНИТЕ ЭТИ ДАННЫЕ НА ВАШИ РЕАЛЬНЫЕ SMTP-НАСТРОЙКИ
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
+SMTP_USER = "ваш_email@gmail.com"
+SMTP_PASSWORD = "ваш_пароль"
+# ========================
 
 @app.route('/send-verification', methods=['POST'])
 def send_verification():
@@ -17,11 +21,6 @@ def send_verification():
         
         if not email or not code:
             return jsonify({'success': False, 'error': 'Недостаточно данных'}), 400
-        
-        smtp_server = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
-        smtp_port = int(os.getenv('SMTP_PORT', 587))
-        smtp_user = os.getenv('SMTP_USER')
-        smtp_password = os.getenv('SMTP_PASSWORD')
         
         subject = 'Код подтверждения DarkGram'
         body = f"""
@@ -57,13 +56,13 @@ def send_verification():
         
         msg = MIMEText(body, 'html')
         msg['Subject'] = subject
-        msg['From'] = smtp_user
+        msg['From'] = SMTP_USER
         msg['To'] = email
         
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
             server.starttls()
-            server.login(smtp_user, smtp_password)
-            server.sendmail(smtp_user, [email], msg.as_string())
+            server.login(SMTP_USER, SMTP_PASSWORD)
+            server.sendmail(SMTP_USER, [email], msg.as_string())
         
         return jsonify({'success': True}), 200
         
