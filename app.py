@@ -8,8 +8,8 @@ app = Flask(__name__)
 # ЗАМЕНИТЕ ЭТИ ДАННЫЕ НА ВАШИ РЕАЛЬНЫЕ SMTP-НАСТРОЙКИ
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-SMTP_USER = "ваш_email@gmail.com"
-SMTP_PASSWORD = "ваш_пароль"
+SMTP_USER = "darkgramnetwork@gmail.com"
+SMTP_PASSWORD = "darkgram1234"
 # ========================
 
 @app.route('/send-verification', methods=['POST'])
