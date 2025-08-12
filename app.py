@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
 import smtplib
 from email.mime.text import MIMEText
+from flask_cors import CORS  # Импорт модуля CORS
 
 app = Flask(__name__)
+CORS(app)  # Разрешить все CORS-запросы
 
 # ===== КОНФИГУРАЦИЯ =====
 # ЗАМЕНИТЕ ЭТИ ДАННЫЕ НА ВАШИ РЕАЛЬНЫЕ SMTP-НАСТРОЙКИ
@@ -12,8 +14,16 @@ SMTP_USER = "darkgramnetwork@gmail.com"
 SMTP_PASSWORD = "darkgram1234"
 # ========================
 
-@app.route('/send-verification', methods=['POST'])
+@app.route('/send-verification', methods=['POST', 'OPTIONS'])
 def send_verification():
+    if request.method == 'OPTIONS':
+        # Предварительный запрос CORS
+        response = jsonify({'status': 'preflight'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', '*')
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        return response
+        
     try:
         data = request.json
         email = data.get('email')
@@ -64,10 +74,14 @@ def send_verification():
             server.login(SMTP_USER, SMTP_PASSWORD)
             server.sendmail(SMTP_USER, [email], msg.as_string())
         
-        return jsonify({'success': True}), 200
+        response = jsonify({'success': True})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
         
     except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
+        response = jsonify({'success': False, 'error': str(e)})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response, 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
