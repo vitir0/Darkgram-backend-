@@ -8,10 +8,10 @@ CORS(app)  # Разрешить все CORS-запросы
 
 # ===== КОНФИГУРАЦИЯ =====
 # ЗАМЕНИТЕ ЭТИ ДАННЫЕ НА ВАШИ РЕАЛЬНЫЕ SMTP-НАСТРОЙКИ
-SMTP_SERVER = "smtp.gmail.com"
+SMTP_SERVER = "smtp.yandex.ru"
 SMTP_PORT = 465
-SMTP_USER = "darkgramnetwork@gmail.com"
-SMTP_PASSWORD = "darkgram1234"
+SMTP_USER = "network-testt@yandex.ru"
+SMTP_PASSWORD = "009009test"
 # ========================
 
 @app.route('/send-verification', methods=['POST', 'OPTIONS'])
