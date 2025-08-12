@@ -9,7 +9,7 @@ CORS(app)  # Разрешить все CORS-запросы
 # ===== КОНФИГУРАЦИЯ =====
 # ЗАМЕНИТЕ ЭТИ ДАННЫЕ НА ВАШИ РЕАЛЬНЫЕ SMTP-НАСТРОЙКИ
 SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 443
+SMTP_PORT = 465
 SMTP_USER = "darkgramnetwork@gmail.com"
 SMTP_PASSWORD = "darkgram1234"
 # ========================
