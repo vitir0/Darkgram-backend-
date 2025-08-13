@@ -16,8 +16,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Используем переменные окружения для безопасности
 SMTP_SERVER = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
 SMTP_PORT = int(os.getenv('SMTP_PORT', 587))
-SMTP_USER = os.getenv('SMTP_USER', 'darkgramnetwork@gmail.com')
-SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', 'darkgram1234')
+SMTP_USER = os.getenv('SMTP_USER', 'network-testt@yandex.ru')
+SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', 'valewagjffambxns')
 # ========================
 
 def send_email_via_smtp(email, code):
