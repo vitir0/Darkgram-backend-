@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 # ===== КОНФИГУРАЦИЯ =====
 # Используем переменные окружения для безопасности
-SMTP_SERVER = os.getenv('SMTP_SERVER', 'smtp.yandex.ru')
+SMTP_SERVER = os.getenv('SMTP_SERVER', 'smtp.yandex.com')
 SMTP_PORT = int(os.getenv('SMTP_PORT', 465))
 SMTP_USER = os.getenv('SMTP_USER', 'network-testt@yandex.ru')
 SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', 'valewagjffambxns')
