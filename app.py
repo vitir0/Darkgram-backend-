@@ -16,8 +16,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Используем переменные окружения для безопасности
 SMTP_SERVER = os.getenv('SMTP_SERVER', 'smtp.yandex.com')
 SMTP_PORT = int(os.getenv('SMTP_PORT', 465))
-SMTP_USER = os.getenv('SMTP_USER', 'network-testt@yandex.ru')
-SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', 'valewagjffambxns')
+SMTP_USER = os.getenv('SMTP_USER', 'поменяй на свою почту и не забуть включить imap')
+SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', 'тут пароль')
 # ========================
 
 def send_email_via_smtp(email, code):
